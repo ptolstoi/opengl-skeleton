@@ -4,6 +4,8 @@
     const auto kPlatformName = "OS X";
 #elif __unix__
     const auto kPlatformName = "Linux";
+#elif _WIN32
+    const auto kPlatformName = "Windows";
 #else
-    throw "platform not defined";
+    #error platform not defined
 #endif
