@@ -2,9 +2,6 @@
 # Helper variables
 #
 
-set(APP_VERSION_SHORT "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}")
-set(APP_VERSION_LONG "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}.${APP_VERSION_TWEAK}")
-
 set(APP_ROOT_DIR "${PROJECT_SOURCE_DIR}")
 set(APP_OUTPUT_DIR "${PROJECT_BINARY_DIR}")
 
@@ -38,6 +35,8 @@ if(APPLE)
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${APP_VERSION_SHORT})
     set(MACOSX_BUNDLE_BUNDLE_VERSION ${APP_VERSION_LONG})
     set(MACOSX_BUNDLE_COPYRIGHT ${APP_COPYRIGHT})
+elseif(UNIX)
+    # no special variables needed yet
 else()
-    message(WARNING "Platform not yes supported")
+    message(WARNING "Platform not yet supported")
 endif()

@@ -19,7 +19,9 @@ set(APP_COPYRIGHT "Paul Tolstoi © 2015")
 # Project Setup
 #
 
-project(${APP_NAME} VERSION "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PATCH}.${APP_VERSION_TWEAK}")
+include("cmake/pre_project.cmake")
+
+project(${APP_NAME} VERSION "${APP_VERSION_LONG}")
 
 
 #

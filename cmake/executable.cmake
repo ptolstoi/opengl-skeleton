@@ -18,8 +18,10 @@ if(APPLE)
     set_source_files_properties(res/icon.icns
                                 PROPERTIES
                                 MACOSX_PACKAGE_LOCATION Resources)
+elseif(UNIX)
+    # nothing to do here, no logo for unix :(
 else()
-    message(WARNING "Platform not yet supported")
+    message(FATAL_ERROR "Platform not yet supported")
 endif()
 
 #
@@ -38,6 +40,8 @@ install(TARGETS ${APP_EXECUTABLE_NAME} DESTINATION bin)
 
 if(APPLE)
     set_target_properties(${APP_EXECUTABLE_NAME} PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@loader_path/../Frameworks")
+elseif(UNIX)
+    # nothing to do here, on unix nothing needs to be fixed (yet)
 else()
-    message(WARNING "Platform not yet supported")
+    message(FATAL_ERROR "Platform not yet supported")
 endif()
