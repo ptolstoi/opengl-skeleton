@@ -1,0 +1,5 @@
+function(check_cxx_version MINIMAL_VERSION)
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${MINIMAL_VERSION})
+        message(FATAL_ERROR "${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION} found, minimal ${MINIMAL_VERSION} required")
+    endif()
+endfunction()
