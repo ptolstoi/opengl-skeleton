@@ -3,7 +3,7 @@
 #
 
 set(APP_ROOT_DIR "${PROJECT_SOURCE_DIR}")
-set(APP_OUTPUT_DIR "${PROJECT_BINARY_DIR}")
+set(APP_OUTPUT_DIR "${PROJECT_BINARY_DIR}/bin")
 
 set(APP_SOURCES "${APP_ROOT_DIR}/src")
 set(APP_LIBRARIES "${APP_ROOT_DIR}/lib")
@@ -18,7 +18,7 @@ set(APP_MISC_FILES "")
 list(APPEND CMAKE_MODULE_PATH "${APP_ROOT_DIR}/cmake")
 list(APPEND CMAKE_PREFIX_PATH "${APP_ROOT_DIR}")
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${APP_OUTPUT_DIR}/bin")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${APP_OUTPUT_DIR}")
 
 set(CMAKE_BUILD_TYPE Release)
 
@@ -37,6 +37,8 @@ if(APPLE)
     set(MACOSX_BUNDLE_COPYRIGHT ${APP_COPYRIGHT})
 elseif(UNIX)
     # no special variables needed yet
+elseif(WIN32)
+    # no special varivalbe needed yet
 else()
-    message(WARNING "Platform not yet supported")
+    message(FATAL_ERROR "Platform not yet supported")
 endif()
