@@ -9,6 +9,7 @@ if(${CMAKE_CXX_COMPILER_ID} MATCHES "AppleClang")
 
     if(APPLE)
         set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework AppKit")
     endif()
 else()
     message(WARNING "unknown compiler ${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION}")
