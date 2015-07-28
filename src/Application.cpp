@@ -20,7 +20,7 @@ namespace lornar {
             throw runtime_error("Could not initialize GLFW");
         }
         
-        vector<const int> hint {
+        vector<int> hint {
             GLFW_CONTEXT_VERSION_MAJOR, 3,
             GLFW_CONTEXT_VERSION_MINOR, 2,
             GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE,
