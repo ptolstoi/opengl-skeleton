@@ -32,4 +32,6 @@ include("cmake/variables.cmake")
 include("cmake/functions.cmake")
 
 include("cmake/compiler.cmake")
+
+include("cmake/libraries.cmake")
 include("cmake/executable.cmake")

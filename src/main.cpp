@@ -1,7 +1,15 @@
-#include <iostream>
-#include "main.h"
+//
+//  PlatformDefines.h
+//  OpenGL Skeleton
+//
+//  Created by Paul Tolstoi on 26/07/15.
+//
+//
 
-#ifdef _WIN32
+#include "main.h"
+#include <iostream>
+
+#ifdef ENGINE_WINDOWS
 #include <Windows.h>
 
 int main(int, char*[]);
@@ -13,7 +21,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPSTR lpCmdLine,
 
 int main(int argc, char *argv[]) {
 
-    std::cout << "Hello World from " << kPlatformName << std::endl;
-
+    try {
+        
+        auto app = lornar::Application("OpenGL Skeleton");
+    
+        app.run();
+        
+    } catch (std::exception &e) {
+        std::cout << "Exception: " << e.what() << std::endl;
+    }
+    
     return 0;
 }
