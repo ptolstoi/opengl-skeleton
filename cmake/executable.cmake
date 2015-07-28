@@ -27,12 +27,22 @@ else()
 endif()
 
 #
+# Libraries
+#
+
+set(APP_LINK_LIBRARIES glfw ${GLFW_LIBRARIES})
+
+#
 # Creating target
 #
 
 add_executable(${APP_EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${APP_SOURCE_FILES} ${APP_MISC_FILES})
 
-include_directories(${APP_SOURCES} ${APP_LIBRARIES})
+include_directories(${APP_SOURCES}
+                    ${APP_LIBRARIES}
+                    ${GLFW_INCLUDE_PATH})
+
+target_link_libraries(${APP_EXECUTABLE_NAME} ${APP_LINK_LIBRARIES})
 
 install(TARGETS ${APP_EXECUTABLE_NAME} DESTINATION bin)
 
