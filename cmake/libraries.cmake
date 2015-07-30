@@ -2,10 +2,10 @@
 # glfw
 #
 
-set(GLFW_BUILD_EXAMPLES OFF)
-set(GLFW_BUILD_TESTS OFF)
-set(GLFW_BUILD_DOCS OFF)
-set(GLFW_INSTALL OFF)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "build glfw examples")
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "build glfw tests")
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "build glfw docs")
+set(GLFW_INSTALL OFF CACHE BOOL "install glfw")
 
 add_subdirectory("${APP_LIBRARIES}/glfw")
 

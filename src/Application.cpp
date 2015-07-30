@@ -9,6 +9,7 @@
 #include "Application.h"
 
 #include <vector>
+#include <stdexcept>
 
 namespace lornar {
     

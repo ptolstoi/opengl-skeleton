@@ -12,8 +12,12 @@ set(APP_VERSION_LONG "${APP_VERSION_MAJOR}.${APP_VERSION_MINOR}.${APP_VERSION_PA
 if(APPLE)
     # we don't need nothing here
 elseif(UNIX)
-    set(CMAKE_C_COMPILER "/usr/bin/clang")
-    set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+    if($ENV{TRAVIS})
+      # is already set
+    else()
+      set(CMAKE_C_COMPILER "/usr/bin/clang")
+      set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
+    endif()
 elseif(WIN32)
     # we don't need nothing here
 else()

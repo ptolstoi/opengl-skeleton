@@ -1,0 +1,28 @@
+language: cpp
+
+compiler:
+  - clang
+
+before_install:
+  - echo "deb http://llvm.org/apt/precise/ llvm-toolchain-precise main" | sudo tee -a /etc/apt/sources.list
+  - echo "deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.6 main" | sudo tee -a /etc/apt/sources.list
+  - echo "deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu precise main" | sudo tee -a /etc/apt/sources.list
+  - sudo apt-add-repository --yes ppa:sfttech/random # cmake
+  - sudo apt-get update -qq
+
+install:
+  - sudo apt-get remove -qq cmake
+  - sudo apt-get install --allow-unauthenticated -qq cmake clang-3.6 libclang-3.6-dev
+
+before_script:
+  - cmake --version
+  - clang --version
+  - mkdir build
+  - cd build
+
+script:
+  - cmake -DCMAKE_CXX_COMPILER=clang++-3.6 -DCMAKE_C_COMPILER=clang-3.6 ..
+  - make
+
+cache:
+  apt: true
