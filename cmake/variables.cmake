@@ -42,3 +42,7 @@ elseif(WIN32)
 else()
     message(FATAL_ERROR "Platform not yet supported")
 endif()
+
+if(EMSCRIPTEN)
+    set(APP_EXECUTABLE_NAME "${APP_EXECUTABLE_NAME}.html")
+endif()
