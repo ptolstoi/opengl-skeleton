@@ -7,9 +7,11 @@
 //
 
 #include "Application.h"
+#include "PlatformDefines.h"
 
 #include <vector>
 #include <stdexcept>
+#include <random>
 
 namespace lornar {
     
@@ -52,11 +54,24 @@ namespace lornar {
     
     void Application::run() {
         
+#ifndef EMSCRIPTEN
         while (!glfwWindowShouldClose(m_window)) {
+#else
+            int w = 0, h = 0;
+            glfwGetFramebufferSize(m_window, &w, &h);
+            if (w == 0 || h == 0) {
+                printf("setting canvas size");
+                emscripten_set_canvas_size(640, 480);
+            }
+#endif
+            
+            glClearColor(rand() % 255 / 255.f, 0, 0, 1);
+            glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
             glfwSwapBuffers(m_window);// Swap front and back buffers
             glfwPollEvents();       // Poll for and process events
+#ifndef EMSCRIPTEN
         }
-        
+#endif
     }
     
 }
