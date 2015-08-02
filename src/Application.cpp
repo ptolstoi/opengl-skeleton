@@ -17,7 +17,8 @@ namespace lornar {
     
     Application::Application(const string &name)
     : m_name(name)
-    , m_window(nullptr) {
+    , m_window(nullptr)
+    , m_on(false) {
         
         if(glfwInit() == GL_FALSE) {
             throw runtime_error("Could not initialize GLFW");
@@ -28,8 +29,8 @@ namespace lornar {
             GLFW_CONTEXT_VERSION_MINOR, 2,
             GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE,
             GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE,
-            GLFW_DEPTH_BITS, 16, //no z-buffer required for system framebuffer
-            GLFW_SAMPLES, 4, //Multisample anti aliasing samples
+            GLFW_DEPTH_BITS, 16,
+            GLFW_SAMPLES, 4, 
             GLFW_REFRESH_RATE, 60,
         };
         
@@ -64,8 +65,13 @@ namespace lornar {
                 emscripten_set_canvas_size(640, 480);
             }
 #endif
+            if (m_on) {
+                glClearColor(1, 0, 0, 1);
+            } else {
+                glClearColor(0, 0, 0, 1);
+            }
+            m_on = !m_on;
             
-            glClearColor(rand() % 255 / 255.f, 0, 0, 1);
             glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
             glfwSwapBuffers(m_window);// Swap front and back buffers
             glfwPollEvents();       // Poll for and process events
