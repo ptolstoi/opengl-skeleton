@@ -26,5 +26,7 @@ namespace lornar {
     private:
         string m_name;
         GLFWwindow *m_window;
+        
+        bool m_on;
     };
 }
