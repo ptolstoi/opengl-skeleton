@@ -45,4 +45,5 @@ endif()
 
 if(EMSCRIPTEN)
     set(APP_EXECUTABLE_NAME "${APP_EXECUTABLE_NAME}.html")
+    set(CMAKE_EXECUTABLE_SUFFIX "")
 endif()
