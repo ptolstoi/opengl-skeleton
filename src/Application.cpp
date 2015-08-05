@@ -15,11 +15,11 @@
 
 namespace lornar {
     
-    Application::Application(const string &name)
-    : m_name(name)
-    , m_window(nullptr)
-    , m_on(false) {
-        
+    Application::Application()
+    : m_window(nullptr)
+    , m_on(false) { }
+    
+    void Application::init(const string &name) {
         if(glfwInit() == GL_FALSE) {
             throw runtime_error("Could not initialize GLFW");
         }
@@ -37,13 +37,17 @@ namespace lornar {
         for (size_t h = 0; h < hint.size(); h += 2)
             glfwWindowHint(hint[h], hint[h+1]);
         
-        m_window = glfwCreateWindow(640, 480, m_name.c_str(), nullptr, nullptr);
+        m_window = glfwCreateWindow(640, 480, name.c_str(), nullptr, nullptr);
         
         if (!m_window) {
             throw runtime_error("OpenGL initialization failed, invalid window hints");
         }
         
         glfwMakeContextCurrent(m_window);
+        
+    }
+    
+    void Application::release() {
         
     }
     
