@@ -19,21 +19,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, LPSTR lpCmdLine,
 }
 #endif
 
-lornar::Application *app = nullptr;
-
 void run() {
-    if (app != nullptr) {
-        app->run();
-    }
+    g_app.run();
 }
 
 int main(int argc, char *argv[]) {
     try {
         
-        app = new lornar::Application("OpenGL Skeleton");
+        g_app.init("OpenGL Skeleton");
         
 #ifndef EMSCRIPTEN
-        app->run();
+        g_app.run();
 #else
         emscripten_set_main_loop(run, 0, 0);
 #endif
@@ -42,9 +38,7 @@ int main(int argc, char *argv[]) {
         std::cout << "Exception: " << e.what() << std::endl;
     }
     
-    if (app != nullptr) {
-        delete app;
-    }
+    g_app.release();
     
     return 0;
 }

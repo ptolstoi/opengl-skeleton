@@ -18,13 +18,15 @@ namespace lornar {
     
     class Application {
     public:
-        Application(const string &name);
+        Application();
         virtual ~Application();
+        
+        void init(const string &name);
+        void release();
         
         virtual void run();
         
     private:
-        string m_name;
         GLFWwindow *m_window;
         
         bool m_on;

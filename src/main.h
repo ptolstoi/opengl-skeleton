@@ -10,3 +10,5 @@
 
 #include "PlatformDefines.h"
 #include "Application.h"
+
+lornar::Application g_app;
