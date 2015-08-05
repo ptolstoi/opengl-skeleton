@@ -23,3 +23,7 @@
 #else
 #error platform not defined
 #endif
+
+#ifdef EMSCRIPTEN
+#include <emscripten/emscripten.h>
+#endif

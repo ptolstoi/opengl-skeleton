@@ -5,6 +5,12 @@ file(GLOB_RECURSE APP_SOURCE_FILES "${APP_SOURCES}/*")
 
 foreach(source_file ${APP_SOURCE_FILES})
     message("Source File: ${source_file}")
+
+    if(EMSCRIPTEN)
+        if(source_file MATCHES \.h$ OR source_file MATCHES \.hpp$)
+            list(REMOVE_ITEM APP_SOURCE_FILES source_file)
+        endif()
+    endif()
 endforeach()
 
 #
