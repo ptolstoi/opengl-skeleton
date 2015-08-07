@@ -12,5 +12,13 @@ if(NOT EMSCRIPTEN)
 
     set(GLFW_INCLUDE_PATH "${APP_LIBRARIES}/glfw/include")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_GLFW=3")    
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_GLFW=3")
 endif()
+
+#
+# glm
+#
+
+add_subdirectory("${APP_LIBRARIES}/glm")
+
+set(GLM_INCLUDE_PATH "${APP_LIBRARIES}/glm/glm")
