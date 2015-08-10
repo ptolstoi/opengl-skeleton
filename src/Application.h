@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include <GLFW/glfw3.h>
+#include "opengl.h"
 
 namespace lornar {
     

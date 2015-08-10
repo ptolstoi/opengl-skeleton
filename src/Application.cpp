@@ -7,7 +7,6 @@
 //
 
 #include "Application.h"
-#include "PlatformDefines.h"
 #include "glmmath.h"
 
 #include <vector>
@@ -49,6 +48,12 @@ namespace lornar {
         }
         
         glfwMakeContextCurrent(m_window);
+        
+#ifndef EMSCRIPTEN
+        if(gl3wInit()) {
+            throw runtime_error("failed to initialize gl3w");
+        }
+#endif
         
     }
     

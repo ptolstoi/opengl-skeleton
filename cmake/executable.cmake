@@ -36,7 +36,7 @@ endif()
 # Libraries
 #
 
-set(APP_LINK_LIBRARIES glfw ${GLFW_LIBRARIES} glm)
+set(APP_LINK_LIBRARIES glfw ${GLFW_LIBRARIES} glm gl3w)
 
 #
 # Creating target
@@ -47,6 +47,7 @@ add_executable(${APP_EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${APP_SOURCE_FILES} ${
 include_directories(${APP_SOURCES}
                     ${APP_LIBRARIES}
                     ${GLFW_INCLUDE_PATH}
+                    ${GL3W_INCLUDE_PATH}
                     ${GLM_INCLUDE_PATH})
 
 target_link_libraries(${APP_EXECUTABLE_NAME} ${APP_LINK_LIBRARIES})

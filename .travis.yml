@@ -15,6 +15,9 @@ install:
   - sudo apt-get install --allow-unauthenticated -qq cmake clang-3.6 libclang-3.6-dev
 
 before_script:
+  - cd lib/gl3w
+  - ./gl3w_gen.py
+  - cd ..
   - cmake --version
   - clang --version
   - mkdir build
