@@ -12,6 +12,10 @@
 
 #ifndef EMSCRIPTEN
 #include <GL/gl3w.h>
+#else
+#define GL_GLEXT_PROTOTYPES
+#include <GL/gl.h>
+#include <GL/glext.h>
 #endif
 
 #include <GLFW/glfw3.h>

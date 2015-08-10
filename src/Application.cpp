@@ -55,6 +55,64 @@ namespace lornar {
         }
 #endif
         
+        // shader test
+        auto handleVertex = glCreateShader(GL_VERTEX_SHADER);
+        auto handleFragment = glCreateShader(GL_FRAGMENT_SHADER);
+        
+        string sourceVertexStr = "#version 150\n in vec3 a_pos; void main() { }";
+        string sourceFragmentStr = "#version 150\n in vec3 a_pos; out vec4 o_fragColor; void main() { o_fragColor = vec4(1, 0, 1, 1); }";
+        
+        const GLchar *sv = sourceVertexStr.c_str();
+        const GLchar *sf = sourceVertexStr.c_str();
+
+        auto check = [](GLuint handle) {
+            GLint status;
+            glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
+            if (status == GL_FALSE) {
+                GLint logLength;
+                glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &logLength);
+                
+                GLchar *logStr = new GLchar[logLength + 1];
+                glGetShaderInfoLog(handle, logLength, nullptr, logStr);
+                
+                fprintf(stderr, "Shader compiler error:\n%s\n", logStr);
+                delete[] logStr;
+            }
+        };
+        
+        glShaderSource(handleVertex, 1, &sv, nullptr);
+        glShaderSource(handleFragment, 1, &sf, nullptr);
+        
+        glCompileShader(handleVertex);
+        check(handleVertex);
+        glCompileShader(handleFragment);
+        check(handleFragment);
+        
+        GLint status;
+        
+        auto handleProgram = glCreateProgram();
+        
+        glAttachShader(handleProgram, handleVertex);
+        glAttachShader(handleProgram, handleFragment);
+        
+        glLinkProgram(handleProgram);
+    
+        glGetProgramiv(handleProgram, GL_LINK_STATUS, &status);
+        
+        if (status == GL_FALSE) {
+            GLint logLength;
+            glGetProgramiv(handleProgram, GL_INFO_LOG_LENGTH, &logLength);
+            
+            GLchar *logStr = new GLchar[logLength + 1];
+            glGetProgramInfoLog(handleProgram, logLength, nullptr, logStr);
+            
+            fprintf(stderr, "Linker error:\n%s\n", logStr);
+            delete[] logStr;
+            return;
+        }
+        
+        glDetachShader(handleProgram, handleVertex);
+        glDetachShader(handleProgram, handleFragment);
     }
     
     void Application::release() {
