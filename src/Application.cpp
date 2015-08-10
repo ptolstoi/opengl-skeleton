@@ -8,10 +8,13 @@
 
 #include "Application.h"
 #include "PlatformDefines.h"
+#include "glmmath.h"
 
 #include <vector>
 #include <stdexcept>
 #include <random>
+
+using namespace glm;
 
 namespace lornar {
     
@@ -37,7 +40,9 @@ namespace lornar {
         for (size_t h = 0; h < hint.size(); h += 2)
             glfwWindowHint(hint[h], hint[h+1]);
         
-        m_window = glfwCreateWindow(640, 480, name.c_str(), nullptr, nullptr);
+        ivec2 size(640, 480);
+        
+        m_window = glfwCreateWindow(size.x, size.y, name.c_str(), nullptr, nullptr);
         
         if (!m_window) {
             throw runtime_error("OpenGL initialization failed, invalid window hints");
