@@ -3,15 +3,30 @@
 #
 file(GLOB_RECURSE APP_SOURCE_FILES "${APP_SOURCES}/*")
 
+foreach(file ${FMOD_LIBRARIES})
+    list(APPEND APP_SOURCE_FILES ${file})
+
+    if(APPLE)
+        set_source_files_properties(${file}
+                                    PROPERTIES
+                                    MACOSX_PACKAGE_LOCATION
+                                    Frameworks)
+    endif()
+endforeach()
+
 foreach(source_file ${APP_SOURCE_FILES})
     message("Source File: ${source_file}")
 
     if(EMSCRIPTEN)
         if(source_file MATCHES \.h$ OR source_file MATCHES \.hpp$)
             list(REMOVE_ITEM APP_SOURCE_FILES source_file)
+        elseif(source_file MATCHES \.js$)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --js-library ${source_file}")
         endif()
     endif()
 endforeach()
+
+source_group(javascript REGULAR_EXPRESSION ".*\.js")
 
 #
 # Platform / Generator dependent setup
@@ -36,7 +51,7 @@ endif()
 # Libraries
 #
 
-set(APP_LINK_LIBRARIES glfw ${GLFW_LIBRARIES} glm gl3w)
+set(APP_LINK_LIBRARIES glfw ${GLFW_LIBRARIES} glm gl3w ${FMOD_LIBRARY})
 
 #
 # Creating target
@@ -48,7 +63,8 @@ include_directories(${APP_SOURCES}
                     ${APP_LIBRARIES}
                     ${GLFW_INCLUDE_PATH}
                     ${GL3W_INCLUDE_PATH}
-                    ${GLM_INCLUDE_PATH})
+                    ${GLM_INCLUDE_PATH}
+                    ${FMOD_INCLUDE_PATH})
 
 target_link_libraries(${APP_EXECUTABLE_NAME} ${APP_LINK_LIBRARIES})
 

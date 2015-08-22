@@ -19,7 +19,11 @@ namespace lornar {
     
     Application::Application()
     : m_window(nullptr)
-    , m_on(false) { }
+#ifndef EMSCRIPTEN
+    , m_audio(nullptr)
+#endif
+    , m_on(false)
+    { }
     
     void Application::init(const string &name) {
         if(glfwInit() == GL_FALSE) {
@@ -53,8 +57,13 @@ namespace lornar {
         if(gl3wInit()) {
             throw runtime_error("failed to initialize gl3w");
         }
-#endif
         
+        FMOD_RESULT result = FMOD::System_Create(&m_audio);
+        checkError(result);
+#else
+        audioInit();
+#endif
+
         // shader test
         auto handleVertex = glCreateShader(GL_VERTEX_SHADER);
         auto handleFragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -116,7 +125,10 @@ namespace lornar {
     }
     
     void Application::release() {
-        
+#ifndef EMSCRIPTEN
+        FMOD_RESULT result = m_audio->release();
+        checkError(result);
+#endif
     }
     
     Application::~Application() {
@@ -129,6 +141,7 @@ namespace lornar {
         
 #ifndef EMSCRIPTEN
         while (!glfwWindowShouldClose(m_window)) {
+            
 #else
             int w = 0, h = 0;
             glfwGetFramebufferSize(m_window, &w, &h);
@@ -136,7 +149,10 @@ namespace lornar {
                 printf("setting canvas size");
                 emscripten_set_canvas_size(640, 480);
             }
+            
+            audioUpdate();
 #endif
+            
             if (m_on) {
                 glClearColor(1, 0, 0, 1);
             } else {
@@ -151,5 +167,15 @@ namespace lornar {
         }
 #endif
     }
+    
+#ifndef EMSCRIPTEN
+    inline void Application::checkError(FMOD_RESULT result) {
+        if (result == FMOD_OK) {
+            return;
+        }
+        
+        throw runtime_error(FMOD_ErrorString(result));
+    }
+#endif
     
 }

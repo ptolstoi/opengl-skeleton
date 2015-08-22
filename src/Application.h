@@ -11,6 +11,15 @@
 #include <string>
 
 #include "opengl.h"
+#ifndef EMSCRIPTEN
+#include <fmod.hpp>
+#include <fmod_errors.h>
+#else
+extern "C" {
+    extern void audioInit();
+    extern void audioUpdate();
+}
+#endif
 
 namespace lornar {
     
@@ -28,6 +37,11 @@ namespace lornar {
         
     private:
         GLFWwindow *m_window;
+
+#ifndef EMSCRIPTEN
+        FMOD::System *m_audio;
+        inline void checkError(FMOD_RESULT);
+#endif
         
         bool m_on;
     };

@@ -31,3 +31,11 @@ endif()
 add_subdirectory("${APP_LIBRARIES}/glm")
 
 set(GLM_INCLUDE_PATH "${APP_LIBRARIES}/glm/glm")
+
+#
+# fmod
+#
+
+if(NOT EMSCRIPTEN)
+    find_package(FMOD REQUIRED)
+endif()
