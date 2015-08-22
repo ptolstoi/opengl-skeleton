@@ -7,7 +7,6 @@
 //
 
 #include "Application.h"
-#include "PlatformDefines.h"
 #include "glmmath.h"
 
 #include <vector>
@@ -20,7 +19,11 @@ namespace lornar {
     
     Application::Application()
     : m_window(nullptr)
-    , m_on(false) { }
+#ifndef EMSCRIPTEN
+    , m_audio(nullptr)
+#endif
+    , m_on(false)
+    { }
     
     void Application::init(const string &name) {
         if(glfwInit() == GL_FALSE) {
@@ -50,10 +53,84 @@ namespace lornar {
         
         glfwMakeContextCurrent(m_window);
         
+#ifndef EMSCRIPTEN
+        if(gl3wInit()) {
+            throw runtime_error("failed to initialize gl3w");
+        }
+        
+        FMOD_RESULT result = FMOD::System_Create(&m_audio);
+        checkError(result);
+        result = m_audio->init(100, FMOD_INIT_NORMAL, nullptr);
+        checkError(result);
+#else
+        audioInit();
+#endif
+
+        // shader test
+        auto handleVertex = glCreateShader(GL_VERTEX_SHADER);
+        auto handleFragment = glCreateShader(GL_FRAGMENT_SHADER);
+        
+        string sourceVertexStr = "#version 150\n in vec3 a_pos; void main() { }";
+        string sourceFragmentStr = "#version 150\n in vec3 a_pos; out vec4 o_fragColor; void main() { o_fragColor = vec4(1, 0, 1, 1); }";
+        
+        const GLchar *sv = sourceVertexStr.c_str();
+        const GLchar *sf = sourceVertexStr.c_str();
+
+        auto check = [](GLuint handle) {
+            GLint status;
+            glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
+            if (status == GL_FALSE) {
+                GLint logLength;
+                glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &logLength);
+                
+                GLchar *logStr = new GLchar[logLength + 1];
+                glGetShaderInfoLog(handle, logLength, nullptr, logStr);
+                
+                fprintf(stderr, "Shader compiler error:\n%s\n", logStr);
+                delete[] logStr;
+            }
+        };
+        
+        glShaderSource(handleVertex, 1, &sv, nullptr);
+        glShaderSource(handleFragment, 1, &sf, nullptr);
+        
+        glCompileShader(handleVertex);
+        check(handleVertex);
+        glCompileShader(handleFragment);
+        check(handleFragment);
+        
+        GLint status;
+        
+        auto handleProgram = glCreateProgram();
+        
+        glAttachShader(handleProgram, handleVertex);
+        glAttachShader(handleProgram, handleFragment);
+        
+        glLinkProgram(handleProgram);
+    
+        glGetProgramiv(handleProgram, GL_LINK_STATUS, &status);
+        
+        if (status == GL_FALSE) {
+            GLint logLength;
+            glGetProgramiv(handleProgram, GL_INFO_LOG_LENGTH, &logLength);
+            
+            GLchar *logStr = new GLchar[logLength + 1];
+            glGetProgramInfoLog(handleProgram, logLength, nullptr, logStr);
+            
+            fprintf(stderr, "Linker error:\n%s\n", logStr);
+            delete[] logStr;
+            return;
+        }
+        
+        glDetachShader(handleProgram, handleVertex);
+        glDetachShader(handleProgram, handleFragment);
     }
     
     void Application::release() {
-        
+#ifndef EMSCRIPTEN
+        FMOD_RESULT result = m_audio->release();
+        checkError(result);
+#endif
     }
     
     Application::~Application() {
@@ -66,6 +143,7 @@ namespace lornar {
         
 #ifndef EMSCRIPTEN
         while (!glfwWindowShouldClose(m_window)) {
+            
 #else
             int w = 0, h = 0;
             glfwGetFramebufferSize(m_window, &w, &h);
@@ -73,7 +151,10 @@ namespace lornar {
                 printf("setting canvas size");
                 emscripten_set_canvas_size(640, 480);
             }
+            
+            audioUpdate();
 #endif
+            
             if (m_on) {
                 glClearColor(1, 0, 0, 1);
             } else {
@@ -88,5 +169,15 @@ namespace lornar {
         }
 #endif
     }
+    
+#ifndef EMSCRIPTEN
+    inline void Application::checkError(FMOD_RESULT result) {
+        if (result == FMOD_OK) {
+            return;
+        }
+        
+        throw runtime_error(FMOD_ErrorString(result));
+    }
+#endif
     
 }

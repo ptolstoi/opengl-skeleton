@@ -3,15 +3,30 @@
 #
 file(GLOB_RECURSE APP_SOURCE_FILES "${APP_SOURCES}/*")
 
+foreach(file ${FMOD_LIBRARIES})
+    list(APPEND APP_SOURCE_FILES ${file})
+
+    if(APPLE)
+        set_source_files_properties(${file}
+                                    PROPERTIES
+                                    MACOSX_PACKAGE_LOCATION
+                                    Frameworks)
+    endif()
+endforeach()
+
 foreach(source_file ${APP_SOURCE_FILES})
     message("Source File: ${source_file}")
 
     if(EMSCRIPTEN)
         if(source_file MATCHES \.h$ OR source_file MATCHES \.hpp$)
             list(REMOVE_ITEM APP_SOURCE_FILES source_file)
+        elseif(source_file MATCHES \.js$)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --js-library ${source_file}")
         endif()
     endif()
 endforeach()
+
+source_group(javascript REGULAR_EXPRESSION ".*\.js")
 
 #
 # Platform / Generator dependent setup
@@ -36,7 +51,7 @@ endif()
 # Libraries
 #
 
-set(APP_LINK_LIBRARIES glfw ${GLFW_LIBRARIES} glm)
+set(APP_LINK_LIBRARIES glfw ${GLFW_LIBRARIES} glm gl3w ${FMOD_LIBRARY})
 
 #
 # Creating target
@@ -47,7 +62,9 @@ add_executable(${APP_EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${APP_SOURCE_FILES} ${
 include_directories(${APP_SOURCES}
                     ${APP_LIBRARIES}
                     ${GLFW_INCLUDE_PATH}
-                    ${GLM_INCLUDE_PATH})
+                    ${GL3W_INCLUDE_PATH}
+                    ${GLM_INCLUDE_PATH}
+                    ${FMOD_INCLUDE_PATH})
 
 target_link_libraries(${APP_EXECUTABLE_NAME} ${APP_LINK_LIBRARIES})
 
@@ -67,6 +84,15 @@ elseif(WIN32)
         string(TOUPPER ${config} config_upper)
         set_target_properties( ${APP_EXECUTABLE_NAME} PROPERTIES "RUNTIME_OUTPUT_DIRECTORY_${config_upper}" ${APP_OUTPUT_DIR} )
     endforeach()
+
+    add_custom_command(TARGET ${APP_EXECUTABLE_NAME}
+		                   COMMAND ${CMAKE_COMMAND}
+			                  -DMSVC_BUILD_CONFIG_DIR=${CMAKE_CFG_INTDIR}
+			                  -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+			                  -DPROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}
+			                  -P "${PROJECT_SOURCE_DIR}/cmake/scripts/copydlls.cmake"
+		VERBATIM
+	)
 else()
     message(FATAL_ERROR "Platform not yet supported")
 endif()

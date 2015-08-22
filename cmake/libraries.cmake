@@ -16,9 +16,26 @@ else()
 endif()
 
 #
+# gl3w
+#
+if(NOT EMSCRIPTEN)
+    add_subdirectory("${APP_LIBRARIES}/gl3w")
+
+    set(GL3W_INCLUDE_PATH "${APP_LIBRARIES}/gl3w/include")
+endif()
+
+#
 # glm
 #
 
 add_subdirectory("${APP_LIBRARIES}/glm")
 
 set(GLM_INCLUDE_PATH "${APP_LIBRARIES}/glm/glm")
+
+#
+# fmod
+#
+
+if(NOT EMSCRIPTEN)
+    find_package(FMOD REQUIRED)
+endif()
