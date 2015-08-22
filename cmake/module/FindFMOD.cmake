@@ -1,6 +1,6 @@
 find_path(FMOD_INCLUDE_PATH fmod.h PATH_SUFFIXES lib/fmod/include)
 
-set(FMOD_NAMES ${FMOD_NAMES} fmod)
+set(FMOD_NAMES ${FMOD_NAMES} fmod fmod64_vc.lib)
 find_library(FMOD_LIBRARY
     HINTS lib
     NAMES ${FMOD_NAMES}

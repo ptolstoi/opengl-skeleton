@@ -84,6 +84,15 @@ elseif(WIN32)
         string(TOUPPER ${config} config_upper)
         set_target_properties( ${APP_EXECUTABLE_NAME} PROPERTIES "RUNTIME_OUTPUT_DIRECTORY_${config_upper}" ${APP_OUTPUT_DIR} )
     endforeach()
+
+    add_custom_command(TARGET ${APP_EXECUTABLE_NAME}
+		                   COMMAND ${CMAKE_COMMAND}
+			                  -DMSVC_BUILD_CONFIG_DIR=${CMAKE_CFG_INTDIR}
+			                  -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+			                  -DPROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR}
+			                  -P "${PROJECT_SOURCE_DIR}/cmake/scripts/copydlls.cmake"
+		VERBATIM
+	)
 else()
     message(FATAL_ERROR "Platform not yet supported")
 endif()

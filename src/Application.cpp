@@ -60,6 +60,8 @@ namespace lornar {
         
         FMOD_RESULT result = FMOD::System_Create(&m_audio);
         checkError(result);
+        result = m_audio->init(100, FMOD_INIT_NORMAL, nullptr);
+        checkError(result);
 #else
         audioInit();
 #endif
