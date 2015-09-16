@@ -6,7 +6,7 @@
 	url = https://github.com/g-truc/glm
 [submodule "lib/gl3w"]
 	path = lib/gl3w
-	url = https://github.com/skaslev/gl3w.git
+	url = https://github.com/ptolstoi/gl3w.git
 [submodule "lib/fmod"]
 	path = lib/fmod
 	url = https://github.com/ptolstoi/fmod-for-cmake.git
