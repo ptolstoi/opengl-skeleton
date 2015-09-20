@@ -16,9 +16,9 @@
 #ifdef ENGINE_OSX
 #include <mach-o/dyld.h>
 #include <sys/param.h>
-#elif ENGINE_WINDOWS
+#elif defined(ENGINE_WINDOWS)
 #include <Windows.h>
-#elif ENGINE_LINUX
+#elif defined(ENGINE_LINUX)
 #include <unistd.h>
 #endif
 

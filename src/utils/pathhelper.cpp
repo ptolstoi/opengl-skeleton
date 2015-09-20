@@ -31,8 +31,8 @@ namespace lornar {
             
             result = new string(exePathString);
         }
-#elif ENGINE_WINDOWS
-        HMODULE hModule = GetModuleHandleW(NULL);
+#elif defined(ENGINE_WINDOWS)
+        HMODULE hModule = GetModuleHandleW(nullptr);
         WCHAR exe_fullpath[MAX_PATH];
         GetModuleFileNameW(hModule, exe_fullpath, MAX_PATH);
         
@@ -40,7 +40,7 @@ namespace lornar {
         wstring ws_exe_path(exe_fullpath);
         ws_exe_path = ws_exe_path.substr(0, ws_exe_path.find_last_of('\\'));
         result = new string(ws_exe_path.begin(), ws_exe_path.end());
-#elif ENGINE_LINUX
+#elif defined(ENGINE_LINUX)
         char buf[1024];
         ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf)-1);
         if (len == -1) {
@@ -65,9 +65,9 @@ namespace lornar {
         string * result = nullptr;
 #ifdef ENGINE_OSX
         result = new string(fullPath + "/Resources");
-#elif ENGINE_WINDOWS
+#elif defined(ENGINE_WINDOWS)
         result = new string(fullPath);
-#elif ENGINE_LINUX
+#elif defined(ENGINE_LINUX)
         result = new string(fullPath);
 #else
 #error platform not defined
