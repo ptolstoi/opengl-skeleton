@@ -29,6 +29,33 @@ endforeach()
 source_group(javascript REGULAR_EXPRESSION ".*\.js")
 
 #
+# Collecting all resources files
+#
+
+file(GLOB_RECURSE APP_RESOURCE_FILES "${APP_ROOT_DIR}/res/*")
+
+foreach(file ${APP_RESOURCE_FILES})
+    if(file MATCHES /shader/)
+        list(APPEND APP_SHADER_FILES ${file})
+        message("Shader File: ${file}")
+    elseif(file MATCHES /sound/)
+        list(APPEND APP_SOUND_FILES ${file})
+        message("Sound File: ${file}")
+    elseif(file MATCHES /texture/)
+        list(APPEND APP_TEXTURE_FILES ${file})
+        message("Texture File: ${file}")
+    else()
+        list(APPEND APP_MISC_FILES ${file})
+        message("Other Resource File: ${file}")
+    endif()
+endforeach()
+
+source_group("Resources\\shader" FILES ${APP_SHADER_FILES})
+source_group("Resources\\sound" FILES ${APP_SOUND_FILES})
+source_group("Resources\\texture" FILES ${APP_TEXTURE_FILES})
+source_group("Resources\\misc" FILES ${APP_MISC_FILES})
+
+#
 # Platform / Generator dependent setup
 #
 
@@ -39,10 +66,17 @@ if(APPLE)
     set_source_files_properties(res/icon.icns
                                 PROPERTIES
                                 MACOSX_PACKAGE_LOCATION Resources)
+
+
+    set_macosx_package_location("${APP_ROOT_DIR}/res" "")
+
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10")
 elseif(UNIX)
-    # nothing to do here, no logo for unix :(
+    copy_files("${APP_ROOT_DIR}/res" "${APP_OUTPUT_DIR}")
 elseif(WIN32)
     list(APPEND APP_MISC_FILES res/icon.ico res/icon.rc)
+
+    copy_files("${APP_ROOT_DIR}/res" "${APP_OUTPUT_DIR}")
 else()
     message(FATAL_ERROR "Platform not yet supported")
 endif()
@@ -57,7 +91,7 @@ set(APP_LINK_LIBRARIES glfw ${GLFW_LIBRARIES} glm gl3w ${FMOD_LIBRARY})
 # Creating target
 #
 
-add_executable(${APP_EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${APP_SOURCE_FILES} ${APP_MISC_FILES})
+add_executable(${APP_EXECUTABLE_NAME} WIN32 MACOSX_BUNDLE ${APP_SOURCE_FILES} ${APP_MISC_FILES} ${APP_RESOURCE_FILES})
 
 include_directories(${APP_SOURCES}
                     ${APP_LIBRARIES}

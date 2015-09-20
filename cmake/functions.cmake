@@ -3,3 +3,38 @@ function(check_cxx_version MINIMAL_VERSION)
         message(FATAL_ERROR "${CMAKE_CXX_COMPILER_ID}-${CMAKE_CXX_COMPILER_VERSION} found, minimal ${MINIMAL_VERSION} required")
     endif()
 endfunction()
+
+function(COPY_FILES srcDir destDir)
+    make_directory(${destDir})
+
+    file(GLOB templateFiles RELATIVE ${srcDir} ${srcDir}/*)
+    foreach(templateFile ${templateFiles})
+        set(srcTemplatePath ${srcDir}/${templateFile})
+        set(dstTemplatePath ${destDir}/${templateFile})
+        if(NOT IS_DIRECTORY ${srcTemplatePath})
+            file(COPY ${srcTemplatePath} DESTINATION ${destDir})
+        else()
+            copy_files("${srcTemplatePath}" "${dstTemplatePath}")
+        endif()
+    endforeach(templateFile)
+endfunction()
+
+function(SET_MACOSX_PACKAGE_LOCATION srcDir prefixDir)
+    file(GLOB templateFiles RELATIVE ${srcDir} ${srcDir}/*)
+    foreach(templateFile ${templateFiles})
+        set(srcTemplatePath ${srcDir}/${templateFile})
+
+        if(NOT IS_DIRECTORY ${srcTemplatePath})
+            set(packageLocation "Resources/${prefixDir}")
+            string(LENGTH ${packageLocation} length)
+            math(EXPR length "${length} - 1")
+            string(SUBSTRING ${packageLocation} 0 ${length} packageLocation)
+
+            set_source_files_properties(${srcTemplatePath}
+                                        PROPERTIES
+                                        MACOSX_PACKAGE_LOCATION ${packageLocation})
+        else()
+            set_macosx_package_location("${srcTemplatePath}" "${prefixDir}${templateFile}/")
+        endif()
+    endforeach()
+endfunction()
