@@ -13,6 +13,8 @@
 #include <stdexcept>
 #include <random>
 
+#include "utils/pathhelper.h"
+
 using namespace glm;
 
 namespace lornar {
@@ -62,6 +64,9 @@ namespace lornar {
         checkError(result);
         result = m_audio->init(100, FMOD_INIT_NORMAL, nullptr);
         checkError(result);
+        
+        printf("ApplicationPath: %s\n", getApplicationPath()->c_str());
+        printf("ResourcePath: %s\n", getResourcePath()->c_str());
 #else
         audioInit();
 #endif
