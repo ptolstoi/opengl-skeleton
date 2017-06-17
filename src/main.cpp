@@ -8,6 +8,7 @@
 
 #include "main.h"
 #include <iostream>
+#include "gen/someoutput.h"
 
 #ifdef ENGINE_WINDOWS
 #include <Windows.h>
@@ -24,21 +25,26 @@ void run() {
 }
 
 int main(int argc, char *argv[]) {
+    #if TEEEEEEEEEST
+        std::cout << "It did work!" << std::endl;
+        return 0;
+    #endif
+
     try {
-        
+
         g_app.init("OpenGL Skeleton");
-        
+
 #ifndef EMSCRIPTEN
         g_app.run();
 #else
         emscripten_set_main_loop(run, 0, 0);
 #endif
-        
+
     } catch (std::exception &e) {
         std::cout << "Exception: " << e.what() << std::endl;
     }
-    
+
     g_app.release();
-    
+
     return 0;
 }

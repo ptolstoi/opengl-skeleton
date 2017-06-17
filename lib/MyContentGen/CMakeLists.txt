@@ -1,0 +1,1 @@
+ ADD_EXECUTABLE(MY_CONTENT_GEN src/generate.cpp)

@@ -33,6 +33,12 @@ add_subdirectory("${APP_LIBRARIES}/glm")
 set(GLM_INCLUDE_PATH "${APP_LIBRARIES}/glm/glm")
 
 #
+# MyContentGen
+#
+
+add_subdirectory("${APP_LIBRARIES}/MyContentGen")
+
+#
 # fmod
 #
 

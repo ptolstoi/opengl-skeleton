@@ -55,6 +55,17 @@ source_group("Resources\\sound" FILES ${APP_SOUND_FILES})
 source_group("Resources\\texture" FILES ${APP_TEXTURE_FILES})
 source_group("Resources\\misc" FILES ${APP_MISC_FILES})
 
+ADD_CUSTOM_COMMAND(
+   OUTPUT OUTPUT_OF_MY_CONTENT_GEN
+   COMMAND MY_CONTENT_GEN ${CMAKE_CURRENT_SOURCE_DIR}/someinput.h ${APP_SOURCES}/gen/someoutput.h
+   DEPENDS MY_CONTENT_GEN ${CMAKE_CURRENT_SOURCE_DIR}/someinput.h
+   COMMENT running gen
+)
+
+list(APPEND ${APP_SOURCES} "${APP_SOURCES}/gen/someoutput.h")
+
+add_custom_target(content_gen ALL DEPENDS OUTPUT_OF_MY_CONTENT_GEN)
+
 #
 # Platform / Generator dependent setup
 #
